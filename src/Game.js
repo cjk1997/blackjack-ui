@@ -18,6 +18,7 @@ class Game extends Component {
         this.getCards();
         this.shuffleCards();
         this.createPlayers();
+        this.dealCards();
     };
 
     getCards = () => {
@@ -43,6 +44,45 @@ class Game extends Component {
             let player = { name : "Player" + i, ID : i, points : 0, hand : hand };
             players.push(player);
         };
+    };
+
+    getPoints = (player) => {
+        let points = 0;
+        for (let i = 0; i < players[player].hand.length - 1; i++) {
+            points += players[player].hand[i].value
+        };
+        players[player].points = points;
+        return points;
+    };
+
+    updatePoints = () => {
+        for (let i = 0; i < players.length; i++) {
+            this.getPoints(i);
+            document.getElementById('player_' + i).innerHTML = players[i].points;
+        };
+    };
+
+    dealCards = () => {
+        for (let i = 0; i < 2; i++) {
+            for (let j = 0; j < players.length; j++) {
+                let card = cardDeck.pop();
+                players[j].hand.push(card);
+                renderCard(card, j);
+                updatePoints();
+            };
+        };
+        updateDeck();
+    };
+
+    renderCard = (card, player) => {
+        let hand = getElementById('hand_' + player);
+        hand.appendChild(addCard(card));
+    };
+
+    addCard = (card) => {
+        let add = getElementByClassName('card');
+        add.innerHTML = card.name + ' of ' + card.suit;
+        return add;
     };
 
     render() {
