@@ -85,6 +85,54 @@ class Game extends Component {
         return add;
     };
 
+    hitMe = () => {
+        let card = deck.pop();
+        players[this.state.currentPlayer].hand.push(card);
+        renderCard(card, this.state.currentPlayer);
+        updatePoints();
+        updateDeck();
+        check();
+    };
+
+    check = () => {
+        if (players[this.state.currentPlayer].points > 21) {
+            document.getElementById('status').innerHTML = 'Player: ' + players[this.state.currentPlayer].ID + ' LOST'
+        };
+    };
+
+    stay = () => {
+        if (this.state.currentPlayer != players.length - 1) {
+            document.getElementById('player_' + this.state.currentPlayer).classList.remove('active');
+            this.state.currentPlayer += 1;
+            document.getElementById('player_' + this.state.currentPlayer).classList.add('active');
+        } else {
+            end();
+        };
+    };
+
+    end = () => {
+        let winner = -1;
+        let score = 0;
+
+        for (let i = 0; i < players.length - 1; i++){
+            if (players[i].points > score && players[i].points < 22) {
+                winner = i;
+            };
+            score = players[i].points;
+        };
+        document.getElementById('status').innerHTML = "Winner: Player " + players[winner].id;
+    };
+
+    check = () => {
+        if (players[currentPlayer].points > 21) {
+            document.getElementById('status').innerHTML = 'Player: ' + players[currentPlayer].ID + ' LOST';
+        };
+    };
+
+    updateDeck = () => {
+        document.getElementById('deckcount').innerHTML = cardDeck.length;
+    };
+
     render() {
         const renderPlayers = this.state.players.map((player) => {
             return(
