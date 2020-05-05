@@ -1,14 +1,23 @@
 import React, {Component} from 'react';
-import GameView from './GameView';
-import Card from './Card';
-import './Game.css';
 
 class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
             cardDeck : [],
+            players : [],
+            currentPlayer : 0,
         };
+    };
+
+    startGame = () => {
+        document.getElementById('startbutton').value = "Restart";
+        document.getElementById('status').style.display="none";
+
+        this.setState({ currentPlayer : 0 });
+        this.getCards();
+        this.shuffleCards();
+        this.createPlayers();
     };
 
     getCards = () => {
@@ -28,23 +37,42 @@ class Game extends Component {
         };
     };
 
+    createPlayers = (numPlayers) => {
+        for (let i = 1; 1 <= numPlayers; i++) {
+            let hand = new Array();
+            let player = { name : "Player" + i, ID : i, points : 0, hand : hand };
+            players.push(player);
+        };
+    };
 
     render() {
+        const renderPlayers = this.state.players.map((player) => {
+            return(
+                <>
+                    <div className="player" id={"player_" + players.findIndex(player)} value={player.name}>
+                        <div className="playerID" value={players.findIndex(player).ID}/>
+                        <div className="hand" id={"hand_" + players.findIndex(player)} value={player.hand}/>
+                        <div className="points" id={"points_" + players.findIndex(player)} value={player.points}/>
+                    </div>
+                </>
+            );
+        });
+
         return (
             <>
                 <div className="game">
-                    <div className="cards">
-                        <div className="playerHand"/>
-                        <div className="house"/>
-                        <div className="deck"/>
-                    </div>
-                    <div className="gameButtons">
-                        <input type="button" className="hitMeButton" value="Hit Me!"/>
-                        <input type="button" className="stayButton" value="Stay"/>
-                    </div>
-                    <div className="otherButtons">
-                        <input type="button" className="restartButton" value="Start Again"/>
-                        <input type="button" className="homeButton" value="Home"/>
+                    <div className="card"/>
+                    <div className="gameBody">
+                        <div className="gameButtons">
+                            <input type="button" className="buttons" id="startbutton" value="Start" onClick={}/>
+                            <input type="button" className="buttons" id="hitMeButton" value="Hit Me!" onClick={}/>
+                            <input type="button" className="buttons" id="stayButton" value="Stay" onClick={}/>
+                        </div>
+                        <div className="status" id="status"/>
+                        <div className="players" id="players">
+                            {renderPlayers}
+                        </div>
+                        <div className="clear"/>
                     </div>
                 </div>
             </>
